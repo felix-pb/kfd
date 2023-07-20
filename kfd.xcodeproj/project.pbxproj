@@ -1,0 +1,501 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		297BA1092A310AE100D1E51A /* kfdApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297BA1082A310AE100D1E51A /* kfdApp.swift */; };
+		297BA10B2A310AE100D1E51A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297BA10A2A310AE100D1E51A /* ContentView.swift */; };
+		297BA10D2A310AE200D1E51A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 297BA10C2A310AE200D1E51A /* Assets.xcassets */; };
+		297BA1112A310AE200D1E51A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 297BA1102A310AE200D1E51A /* Preview Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		29125B6F2A4C807F0031761B /* miscellaneous_types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = miscellaneous_types.h; sourceTree = "<group>"; };
+		29125B712A4DD3940031761B /* fileops.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fileops.h; sourceTree = "<group>"; };
+		2948BA6E2A3162FD00B2ED3C /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
+		2948BA6F2A31630800B2ED3C /* info.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = info.h; sourceTree = "<group>"; };
+		2948BA702A31631000B2ED3C /* krkw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = krkw.h; sourceTree = "<group>"; };
+		2948BA712A31631C00B2ED3C /* puaf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = puaf.h; sourceTree = "<group>"; };
+		2948BA722A31636600B2ED3C /* physpuppet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = physpuppet.h; sourceTree = "<group>"; };
+		2948BA762A3163AB00B2ED3C /* kread_kqueue_workloop_ctl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kread_kqueue_workloop_ctl.h; sourceTree = "<group>"; };
+		2948BA772A3163B900B2ED3C /* kread_sem_open.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kread_sem_open.h; sourceTree = "<group>"; };
+		2948BA782A3163C500B2ED3C /* kwrite_dup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kwrite_dup.h; sourceTree = "<group>"; };
+		2948BA792A3163D200B2ED3C /* kwrite_sem_open.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kwrite_sem_open.h; sourceTree = "<group>"; };
+		2948BA7C2A31644B00B2ED3C /* kqworkloop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kqworkloop.h; sourceTree = "<group>"; };
+		2948BA7D2A31647D00B2ED3C /* proc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = proc.h; sourceTree = "<group>"; };
+		2948BA7E2A31649400B2ED3C /* task.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = task.h; sourceTree = "<group>"; };
+		2948BA812A3164CC00B2ED3C /* vm_map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vm_map.h; sourceTree = "<group>"; };
+		2948BA822A3164E900B2ED3C /* fileproc_guard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fileproc_guard.h; sourceTree = "<group>"; };
+		2948BA832A3164FD00B2ED3C /* fileproc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fileproc.h; sourceTree = "<group>"; };
+		2948BA842A31651700B2ED3C /* pseminfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pseminfo.h; sourceTree = "<group>"; };
+		2948BA852A31652700B2ED3C /* psemnode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = psemnode.h; sourceTree = "<group>"; };
+		2948BA862A31653C00B2ED3C /* semaphore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = semaphore.h; sourceTree = "<group>"; };
+		2948BA872A31655600B2ED3C /* vm_map_entry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vm_map_entry.h; sourceTree = "<group>"; };
+		2965065D2A31565B0025D1A7 /* kfd-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "kfd-Bridging-Header.h"; sourceTree = "<group>"; };
+		2965065E2A31565B0025D1A7 /* libkfd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libkfd.h; sourceTree = "<group>"; };
+		297BA1052A310AE100D1E51A /* kfd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kfd.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		297BA1082A310AE100D1E51A /* kfdApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = kfdApp.swift; sourceTree = "<group>"; };
+		297BA10A2A310AE100D1E51A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		297BA10C2A310AE200D1E51A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		297BA10E2A310AE200D1E51A /* kfd.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = kfd.entitlements; sourceTree = "<group>"; };
+		297BA1102A310AE200D1E51A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		29A358F32A43B53300C297A1 /* smith.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = smith.h; sourceTree = "<group>"; };
+		29A53F692A32255600BC9544 /* thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = thread.h; sourceTree = "<group>"; };
+		29A53F6A2A32255E00BC9544 /* uthread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = uthread.h; sourceTree = "<group>"; };
+		29A765292A393FCB006617E8 /* perf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perf.h; sourceTree = "<group>"; };
+		29A7652B2A3943AB006617E8 /* fileglob.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fileglob.h; sourceTree = "<group>"; };
+		29A7652C2A3943B5006617E8 /* ipc_entry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ipc_entry.h; sourceTree = "<group>"; };
+		29A7652D2A3943BD006617E8 /* ipc_port.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ipc_port.h; sourceTree = "<group>"; };
+		29A7652E2A3943CB006617E8 /* ipc_space.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ipc_space.h; sourceTree = "<group>"; };
+		29A7652F2A3943DC006617E8 /* pmap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pmap.h; sourceTree = "<group>"; };
+		29A765302A3943EB006617E8 /* vm_map_copy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vm_map_copy.h; sourceTree = "<group>"; };
+		29A765312A3943F6006617E8 /* vm_named_entry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vm_named_entry.h; sourceTree = "<group>"; };
+		29A765322A394407006617E8 /* vm_object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vm_object.h; sourceTree = "<group>"; };
+		29A765332A394412006617E8 /* vm_page.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vm_page.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		297BA1022A310AE100D1E51A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2948BA6A2A3162C600B2ED3C /* libkfd */ = {
+			isa = PBXGroup;
+			children = (
+				2948BA6E2A3162FD00B2ED3C /* common.h */,
+				2948BA6B2A3162DE00B2ED3C /* info */,
+				2948BA6F2A31630800B2ED3C /* info.h */,
+				2948BA6C2A3162E400B2ED3C /* krkw */,
+				2948BA702A31631000B2ED3C /* krkw.h */,
+				29A765292A393FCB006617E8 /* perf.h */,
+				2948BA6D2A3162E900B2ED3C /* puaf */,
+				2948BA712A31631C00B2ED3C /* puaf.h */,
+			);
+			path = libkfd;
+			sourceTree = "<group>";
+		};
+		2948BA6B2A3162DE00B2ED3C /* info */ = {
+			isa = PBXGroup;
+			children = (
+				2948BA7B2A31642200B2ED3C /* dynamic_types */,
+				2948BA7A2A31641B00B2ED3C /* static_types */,
+			);
+			path = info;
+			sourceTree = "<group>";
+		};
+		2948BA6C2A3162E400B2ED3C /* krkw */ = {
+			isa = PBXGroup;
+			children = (
+				2948BA742A31639800B2ED3C /* kread */,
+				2948BA752A31639D00B2ED3C /* kwrite */,
+			);
+			path = krkw;
+			sourceTree = "<group>";
+		};
+		2948BA6D2A3162E900B2ED3C /* puaf */ = {
+			isa = PBXGroup;
+			children = (
+				2948BA722A31636600B2ED3C /* physpuppet.h */,
+				29A358F32A43B53300C297A1 /* smith.h */,
+			);
+			path = puaf;
+			sourceTree = "<group>";
+		};
+		2948BA742A31639800B2ED3C /* kread */ = {
+			isa = PBXGroup;
+			children = (
+				2948BA762A3163AB00B2ED3C /* kread_kqueue_workloop_ctl.h */,
+				2948BA772A3163B900B2ED3C /* kread_sem_open.h */,
+			);
+			path = kread;
+			sourceTree = "<group>";
+		};
+		2948BA752A31639D00B2ED3C /* kwrite */ = {
+			isa = PBXGroup;
+			children = (
+				2948BA782A3163C500B2ED3C /* kwrite_dup.h */,
+				2948BA792A3163D200B2ED3C /* kwrite_sem_open.h */,
+			);
+			path = kwrite;
+			sourceTree = "<group>";
+		};
+		2948BA7A2A31641B00B2ED3C /* static_types */ = {
+			isa = PBXGroup;
+			children = (
+				29A7652B2A3943AB006617E8 /* fileglob.h */,
+				29125B712A4DD3940031761B /* fileops.h */,
+				2948BA822A3164E900B2ED3C /* fileproc_guard.h */,
+				2948BA832A3164FD00B2ED3C /* fileproc.h */,
+				29A7652C2A3943B5006617E8 /* ipc_entry.h */,
+				29A7652D2A3943BD006617E8 /* ipc_port.h */,
+				29A7652E2A3943CB006617E8 /* ipc_space.h */,
+				29125B6F2A4C807F0031761B /* miscellaneous_types.h */,
+				29A7652F2A3943DC006617E8 /* pmap.h */,
+				2948BA842A31651700B2ED3C /* pseminfo.h */,
+				2948BA852A31652700B2ED3C /* psemnode.h */,
+				2948BA862A31653C00B2ED3C /* semaphore.h */,
+				29A765302A3943EB006617E8 /* vm_map_copy.h */,
+				2948BA872A31655600B2ED3C /* vm_map_entry.h */,
+				29A765312A3943F6006617E8 /* vm_named_entry.h */,
+				29A765322A394407006617E8 /* vm_object.h */,
+				29A765332A394412006617E8 /* vm_page.h */,
+			);
+			path = static_types;
+			sourceTree = "<group>";
+		};
+		2948BA7B2A31642200B2ED3C /* dynamic_types */ = {
+			isa = PBXGroup;
+			children = (
+				2948BA7C2A31644B00B2ED3C /* kqworkloop.h */,
+				2948BA7D2A31647D00B2ED3C /* proc.h */,
+				2948BA7E2A31649400B2ED3C /* task.h */,
+				29A53F692A32255600BC9544 /* thread.h */,
+				29A53F6A2A32255E00BC9544 /* uthread.h */,
+				2948BA812A3164CC00B2ED3C /* vm_map.h */,
+			);
+			path = dynamic_types;
+			sourceTree = "<group>";
+		};
+		297BA0FC2A310AE100D1E51A = {
+			isa = PBXGroup;
+			children = (
+				297BA1072A310AE100D1E51A /* kfd */,
+				297BA1062A310AE100D1E51A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		297BA1062A310AE100D1E51A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				297BA1052A310AE100D1E51A /* kfd.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		297BA1072A310AE100D1E51A /* kfd */ = {
+			isa = PBXGroup;
+			children = (
+				297BA10C2A310AE200D1E51A /* Assets.xcassets */,
+				297BA10A2A310AE100D1E51A /* ContentView.swift */,
+				2965065D2A31565B0025D1A7 /* kfd-Bridging-Header.h */,
+				297BA10E2A310AE200D1E51A /* kfd.entitlements */,
+				297BA1082A310AE100D1E51A /* kfdApp.swift */,
+				2948BA6A2A3162C600B2ED3C /* libkfd */,
+				2965065E2A31565B0025D1A7 /* libkfd.h */,
+				297BA10F2A310AE200D1E51A /* Preview Content */,
+			);
+			path = kfd;
+			sourceTree = "<group>";
+		};
+		297BA10F2A310AE200D1E51A /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				297BA1102A310AE200D1E51A /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		297BA1042A310AE100D1E51A /* kfd */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 297BA1142A310AE200D1E51A /* Build configuration list for PBXNativeTarget "kfd" */;
+			buildPhases = (
+				297BA1012A310AE100D1E51A /* Sources */,
+				297BA1022A310AE100D1E51A /* Frameworks */,
+				297BA1032A310AE100D1E51A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = kfd;
+			productName = kfd;
+			productReference = 297BA1052A310AE100D1E51A /* kfd.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		297BA0FD2A310AE100D1E51A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1430;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					297BA1042A310AE100D1E51A = {
+						CreatedOnToolsVersion = 14.3.1;
+						LastSwiftMigration = 1430;
+					};
+				};
+			};
+			buildConfigurationList = 297BA1002A310AE100D1E51A /* Build configuration list for PBXProject "kfd" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 297BA0FC2A310AE100D1E51A;
+			productRefGroup = 297BA1062A310AE100D1E51A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				297BA1042A310AE100D1E51A /* kfd */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		297BA1032A310AE100D1E51A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				297BA1112A310AE200D1E51A /* Preview Assets.xcassets in Resources */,
+				297BA10D2A310AE200D1E51A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		297BA1012A310AE100D1E51A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				297BA10B2A310AE100D1E51A /* ContentView.swift in Sources */,
+				297BA1092A310AE100D1E51A /* kfdApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		297BA1122A310AE200D1E51A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		297BA1132A310AE200D1E51A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		297BA1152A310AE200D1E51A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = kfd/kfd.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"kfd/Preview Content\"";
+				DEVELOPMENT_TEAM = 4YW3B9LRX5;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.p0up0u.kfd;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "kfd/kfd-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		297BA1162A310AE200D1E51A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = kfd/kfd.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"kfd/Preview Content\"";
+				DEVELOPMENT_TEAM = 4YW3B9LRX5;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.p0up0u.kfd;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "kfd/kfd-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		297BA1002A310AE100D1E51A /* Build configuration list for PBXProject "kfd" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				297BA1122A310AE200D1E51A /* Debug */,
+				297BA1132A310AE200D1E51A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		297BA1142A310AE200D1E51A /* Build configuration list for PBXNativeTarget "kfd" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				297BA1152A310AE200D1E51A /* Debug */,
+				297BA1162A310AE200D1E51A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 297BA0FD2A310AE100D1E51A /* Project object */;
+}
