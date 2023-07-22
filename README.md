@@ -67,25 +67,7 @@ argument.
 
 ## What are the supported OS versions and devices?
 
-The later stage of the exploit makes use of various offsets. For the structures that have identical
-offsets across all versions that I tested, I simply included their definitions under the
-[static_types](kfd/libkfd/info/static_types/) folder. For the structures that have different
-offsets, I built offset tables for them under the [dynamic_types](kfd/libkfd/info/dynamic_types/)
-folder. Then, I map the "kern.osversion" of the device to the appropriate index for those offset
-tables. Please check the function `info_init()`, located in [info.h](kfd/libkfd/info.h), for the
-list of currently supported iOS and macOS versions. However, please note that I only tested the
-exploits on an iPhone 14 Pro Max and a MacBook Air (M2 2022). Therefore, it is possible that the
-offsets are actually different on other devices, even for the same OS version. Keep this in mind if
-you get a "Kernel data abort" panic on a "supported" version. Fortunately, those offsets should all
-be easily retrievable from the XNU source code.
-
-On the other hand, in order to bootstrap the better KRKW primitive, the exploit makes use of certain
-static addresses which must be retrieved from the kernelcache. This is a tedious process, which I
-only carried out for the kernelcaches of certain iOS versions on the iPhone 14 Pro Max. Please check
-the function `perf_init()`, located in [perf.h](kfd/libkfd/perf.h), for the list of currently
-supported versions. Note that none of the exploits require the better KRKW primitive in order to
-succeed. However, if you plan on doing research based on this project, then it is probably
-worthwhile to add support for the better KRKW primitive for your own device!
+@todo: update this!
 
 ---
 
@@ -123,8 +105,8 @@ exploits in a dedicated write-up:
 In addition, I have split the vulnerability-specific part of the exploits used to achieve the PUAF
 primitive into distinct write-ups, listed below in chronological order of discovery:
 
--   [PhysPuppet](writeups/physpuppet.md)
--   [Smith](writeups/smith.md)
+- [PhysPuppet](writeups/physpuppet.md)
+- [Smith](writeups/smith.md)
 
 However, please note that these write-ups have been written for an audience that is already familiar
 with the XNU virtual memory system.

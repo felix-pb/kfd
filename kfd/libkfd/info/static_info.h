@@ -2,10 +2,36 @@
  * Copyright (c) 2023 Félix Poulin-Bélanger. All rights reserved.
  */
 
-#ifndef miscellaneous_types_h
-#define miscellaneous_types_h
+#ifndef static_info_h
+#define static_info_h
+
+#define pages(number_of_pages) ((number_of_pages) * (16384ull))
+
+#define t1sz_boot (17ull)
+#define ptr_mask ((1ull << (64ull - t1sz_boot)) - 1ull)
+#define pac_mask (~ptr_mask)
+#define unsign_kaddr(kaddr) ((kaddr) | (pac_mask))
+
+const u64 msg_ool_size_small = (32 * 1024);
 
 #define GUARD_REQUIRED (1u << 1)
+
+struct psemnode {
+    u64 pinfo;
+    u64 padding;
+};
+
+struct fileproc {
+    u32 fp_iocount;
+    u32 fp_vflags;
+    u16 fp_flags;
+    u16 fp_guard_attrs;
+    u64 fp_glob;
+    union {
+        u64 fp_wset;
+        u64 fp_guard;
+    };
+};
 
 /*
  * kqueue stuff
@@ -280,4 +306,4 @@ enum perfmon_ioctl {
 #define ARM_16K_TT_L3_SHIFT         14
 #define ARM_16K_TT_L3_INDEX_MASK    0x0000000001ffc000ull
 
-#endif /* miscellaneous_types_h */
+#endif /* static_info_h */

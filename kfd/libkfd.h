@@ -54,9 +54,8 @@ struct info {
         i32 pid;
         u64 tid;
         u64 vid;
-        bool ios;
-        char osversion[8];
         u64 maxfilesperproc;
+        char kern_version[512];
     } env;
     struct {
         u64 current_map;
@@ -73,7 +72,6 @@ struct info {
 };
 
 struct perf {
-    u64 kernelcache_index;
     u64 kernel_slide;
     u64 gVirtBase;
     u64 gPhysBase;
