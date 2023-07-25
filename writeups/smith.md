@@ -1057,7 +1057,7 @@ list. Unfortunately, as a consequence of this, most VM operations that affect ou
 - `Illegal action: h1: [...]`
 
 Trust me, I have triggered them all. However, if we make sure that the first hole is bigger than a
-certain size, then we could at least accomodate some calls to `vm_allocate()` with the flag
+certain size, then we could at least accommodate some calls to `vm_allocate()` with the flag
 `VM_FLAGS_ANYWHERE`, up to that size. Note that we would also need to make sure that the first
 hole's start address is high enough to guarantee that we don't accidentally find `vme2b` during the
 insertion of the new VME, otherwise we would trigger the "Found an existing entry" panic or the
@@ -1065,7 +1065,7 @@ insertion of the new VME, otherwise we would trigger the "Found an existing entr
 
 Finally, as will be explained in Appendix B, in step 1 of `smith_run()`, we want to allocate `vme0`
 to `vme4` as much to the bottom-right of the red-black tree as possible. Therefore,
-`smith_helper_init()` finds the last hole that is big enough to accomodate those 5 VMEs. Note that
+`smith_helper_init()` finds the last hole that is big enough to accommodate those 5 VMEs. Note that
 the "high end" of the VM map is usually empty, so those 5 VMEs will almost always go into the VA
 range of [map->max_offset - (3X+5)P, map->max_offset), where (3X+5)P is the total size of `vme0` to
 `vme4`.
