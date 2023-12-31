@@ -13,6 +13,7 @@ of libkfd is quite small and intuitive:
 enum puaf_method {
     puaf_physpuppet,
     puaf_smith,
+    puaf_landa,
 };
 
 enum kread_method {
@@ -39,10 +40,16 @@ void kclose(u64 kfd);
         - This method exploits [CVE-2023-23536][1].
         - Fixed in iOS 16.4 and macOS 13.3.
         - Reachable from the App Sandbox but not the WebContent sandbox.
+        - $52,500 Apple Security Bounty reward.
     - `puaf_smith`:
         - This method exploits [CVE-2023-32434][2].
         - Fixed in iOS 16.5.1 and macOS 13.4.1.
         - Reachable from the WebContent sandbox and might have been actively exploited.
+    - `puaf_landa`:
+        - This method exploits [CVE-2023-41974][3].
+        - Fixed in iOS 17.0 and macOS 14.0.
+        - Reachable from the App Sandbox but not the WebContent sandbox.
+        - $70,000 Apple Security Bounty reward.
 - `kread_method`: The method used to obtain the initial `kread()` primitive.
 - `kwrite_method`: The method used to obtain the initial `kwrite()` primitive.
 
@@ -62,12 +69,7 @@ argument.
 
 [1]: https://support.apple.com/en-us/HT213676
 [2]: https://support.apple.com/en-us/HT213814
-
----
-
-## What are the supported OS versions and devices?
-
-@todo: update this!
+[3]: https://support.apple.com/en-us/HT213938
 
 ---
 
@@ -107,6 +109,7 @@ primitive into distinct write-ups, listed below in chronological order of discov
 
 - [PhysPuppet](writeups/physpuppet.md)
 - [Smith](writeups/smith.md)
+- [Landa](writeups/landa.md)
 
 However, please note that these write-ups have been written for an audience that is already familiar
 with the XNU virtual memory system.
