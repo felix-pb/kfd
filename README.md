@@ -1,3 +1,5 @@
+> Quick disclaimer: I have no intention of adding offsets for other devices and iOS versions.
+
 # kfd
 
 kfd, short for kernel file descriptor, is a project to read and write kernel memory on Apple
