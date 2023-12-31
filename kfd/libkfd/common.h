@@ -19,6 +19,8 @@
 #include <sys/sysctl.h>
 #include <unistd.h>
 
+#define pages(number_of_pages) ((number_of_pages) * (ARM_PGBYTES))
+
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 

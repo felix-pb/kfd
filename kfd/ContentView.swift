@@ -11,8 +11,8 @@ struct ContentView: View {
     @State private var puaf_pages_index = 7
     @State private var puaf_pages = 0
 
-    private var puaf_method_options = ["physpuppet", "smith"]
-    @State private var puaf_method = 1
+    private var puaf_method_options = ["physpuppet", "smith", "landa"]
+    @State private var puaf_method = 2
 
     private var kread_method_options = ["kqueue_workloop_ctl", "sem_open"]
     @State private var kread_method = 1

