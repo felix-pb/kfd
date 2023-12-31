@@ -90,7 +90,7 @@ substep 1A:
 
 ![landa-figure1.png](figures/landa-figure1.png)
 
-In substep 2B, we `vm_allocate()` a memory region of (X+3) pages at a random address B, which will
+In substep 1B, we `vm_allocate()` a memory region of (X+3) pages at a random address B, which will
 be used as the destination range of the copy in step 2, except for the last page. Then, we split
 that memory region into four distinct VMEs, described in the list below in ascending address order:
 
