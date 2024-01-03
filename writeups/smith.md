@@ -145,7 +145,7 @@ vm_map_copyin_internal(
     }
 
     src_end = src_addr + len; // src_end := (0ULL-1)
-    if (src_end < src_addr) { // branch not taken, because no overflow occured at this point
+    if (src_end < src_addr) { // branch not taken, because no overflow occurred at this point
         ...
     }
 
@@ -1124,7 +1124,7 @@ addresses greater than or equal to D are still guaranteed to go right of `vme2`,
 had its original VA range of [C:D). In fact, the only lookups that are indeed affected are for
 addresses in the VA range of [C:D), which should normally return TRUE with `vme2` but would return
 FALSE because of the corrupted end address. That said, the PUAF exploit has been crafted to avoid
-such lookups during the critical section: the only occurence is the very first lookup in step 2,
+such lookups during the critical section: the only occurrence is the very first lookup in step 2,
 right before the vulnerability is triggered.
 
 Without further ado, here is the detailed walkthrough of the PUAF exploit when it comes to
