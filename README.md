@@ -49,7 +49,7 @@ void kclose(u64 kfd);
         - Reachable from the WebContent sandbox and might have been actively exploited.
     - `puaf_landa`:
         - This method exploits [CVE-2023-41974][3].
-        - Fixed in iOS 17.0 and macOS 14.0.
+        - Fixed in iOS 16.7 and 17.0.1and macOS 14.0.
         - Reachable from the App Sandbox but not the WebContent sandbox.
         - $70,000 Apple Security Bounty reward.
 - `kread_method`: The method used to obtain the initial `kread()` primitive.
