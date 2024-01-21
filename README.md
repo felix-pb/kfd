@@ -40,16 +40,16 @@ void kclose(u64 kfd);
 - `puaf_method`: The method used to obtain the PUAF primitive, with the following options:
     - `puaf_physpuppet`:
         - This method exploits [CVE-2023-23536][1].
-        - Fixed in iOS 16.4 and macOS 13.3.
+        - Fixed in iOS 15.7.4, iOS 16.4, macOS 11.7.5, macOS 12.6.4, and macOS 13.3.
         - Reachable from the App Sandbox but not the WebContent sandbox.
         - $52,500 Apple Security Bounty reward.
     - `puaf_smith`:
         - This method exploits [CVE-2023-32434][2].
-        - Fixed in iOS 16.5.1 and macOS 13.4.1.
+        - Fixed in iOS 15.7.7, iOS 16.5.1, macOS 11.7.8, macOS 12.6.7, and macOS 13.4.1.
         - Reachable from the WebContent sandbox and might have been actively exploited.
     - `puaf_landa`:
         - This method exploits [CVE-2023-41974][3].
-        - Fixed in iOS 17.0 and macOS 14.0.
+        - Fixed in iOS 16.7, iOS 17.0, macOS 13.6, and macOS 14.0.
         - Reachable from the App Sandbox but not the WebContent sandbox.
         - $70,000 Apple Security Bounty reward.
 - `kread_method`: The method used to obtain the initial `kread()` primitive.
